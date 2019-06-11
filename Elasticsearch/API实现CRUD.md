@@ -56,5 +56,16 @@ PUT lib
     multi_match: 可以指定多个字段
     GET /lib3/user/_search {"query":{"multi_match":{"query":"lvyou","fields":["interests","name"]}}}
     match_phrase:短语匹配查询
-    Elasticsearch引擎首先分析（analyze）查询字符串，从分析后的文本中构建短
+    Elasticsearch引擎首先分析（analyze）查询字符串，从分析后的文本中构建短语查询，这意味着必须匹配短语中的所有分词，并保证各个分词的相对位置不变：
+    GET /lib3/user/_search {
+       "query":{
+          "match_phrase":{"interests":"duanlian, shuoxiangsheng"}
+       }
+    }
+    
+##### 指定返回的字段
+ ****_source****
+ 
+    GET /lib3/user/_search {"_source":["address","name"],"query":{"match":{"interests":"changge"}}}
+##### 控制加载的字段    
     
