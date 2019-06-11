@@ -10,3 +10,41 @@ PUT /lib/
   }
 }
 PUT lib
+
+#### 基本查询（Query查询）
+##### 准备基本数据
+     PUT /lib3 {
+       "settings"：{
+          "number_of_shards":3,
+          "number_of_replicas":0
+       },
+       "mappings":{
+         "user":{
+            "properties":{
+                "name":{"type":"text"},
+                "address":{"type":"text"},
+                "age":{"type":"integer"},
+                "interests":{"type":"text"},
+                "birthday":{"type":"data"}
+            }
+         }
+       }
+     }
+     
+     GET /lib3/user/_search?q=name:lisi
+     
+     GET /lib3/user/_search?q=name:zhaoliu&sort=age:desc
+##### term查询和terms查询
+    term query 会去倒排索引中询找确切的term,它并不知道分词器的存在，这种查询适合keyword、numeric、date.
+    term: 查询某个字段里含有某个关键词的文档
+    GET /lib3/user/_search/{"query":{"term":{"interests":"changge"}}}
+    terms: 查询某个字段含有多个关键词的文档
+    GET /lib3/user/_search/{"query":{"term":{"interests":["changge","hejiu"]}}}
+##### 控制查询返回的数量
+> from: 从哪一个文档开始  size：需要的个数
+
+    GET /lib3/user/_search {"from":0,"size":2,"query":{"term":{"interests":["changge","hejiu"]}}}
+    
+##### 返回版本号
+    GET /lib3/user/_search {"version":true,"query":{"term":{"interests":["changge","hejiu"]}}}
+##### match查询
