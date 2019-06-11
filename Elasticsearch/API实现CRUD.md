@@ -64,8 +64,24 @@ PUT lib
     }
     
 ##### 指定返回的字段
- ****_source****
+ > _source、"_source":{"includes":"addr*","excludes":["name","bir*"]}
  
     GET /lib3/user/_search {"_source":["address","name"],"query":{"match":{"interests":"changge"}}}
-##### 控制加载的字段    
+##### 控制加载的字段  
+
+##### fuzzy实现模糊查询
+value: 查询的关键字 <br/>
+boost: 查询的权值，默认值是1.0 <br/>
+mim_similarity: 设置匹配的最小相似度，默认值为0.5，对于字符串，取值为0-1（包括0和1）；对于数值，取值可能大于1，对于日期型取值为1d,1m等，<br/>
+                1d代表一天 <br/>
+prefix_length: 指明区分词项的共同前缀长度，默认0 <br/>
+max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 <br/>
+
+    GET /lib3/user/_seach {"query":{"fuzzy":{"interests":"chagge"}}}
+    GET /lib3/user/_seach {"query":{"fuzzy":{"interest":{"value":"chagge"}}}}
+
+##### 高亮搜索结果
+    GET /lib3/user/_search {"query":{"match":{"interests":"changge"}},"highlight":{"fields":{"interests":{}}}}
     
+#### Filter查询
+filter是不计算相关性的，同时可以cache,因此，filter速度要快于query
