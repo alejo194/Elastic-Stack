@@ -48,3 +48,13 @@ PUT lib
 ##### 返回版本号
     GET /lib3/user/_search {"version":true,"query":{"term":{"interests":["changge","hejiu"]}}}
 ##### match查询
+    match query: 知道分词器的存在，会对filed进行分词操作，然后在查询
+    GET /lib3/user/_search {"query":{"match":{"name":"zhaoliu lisi"}}}
+    GET /lib3/user/_search {"query":{"match":{"age":20}}}
+    match_all: 查询所有文档
+    GET /lib3/user/_search {"query":{"match_all":{}}}
+    multi_match: 可以指定多个字段
+    GET /lib3/user/_search {"query":{"multi_match":{"query":"lvyou","fields":["interests","name"]}}}
+    match_phrase:短语匹配查询
+    Elasticsearch引擎首先分析（analyze）查询字符串，从分析后的文本中构建短
+    
