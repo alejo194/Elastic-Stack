@@ -81,7 +81,16 @@ max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 
 
     GET /lib3/user/_seach {"query":{"fuzzy":{"interests":"chagge"}}}
     GET /lib3/user/_seach {"query":{"fuzzy":{"interest":{"value":"chagge"}}}}
-
+    
+##### 前缀匹配查询
+    GET /lib3/user/_search {"query":{"match_phrase_prefix":{"name":{"query":"赵"}}}}
+##### 范围查询
+    range实现范围查询
+    参数：from,to,include_lower,include_upper,boost
+    include_lower是否包含范围的左边界，默认是true
+    include_upper:是否包含范围的右边界，默认是true
+    GET /lib3/user/_search {"query":{"range":{"birthday":{"from":"1990-10-10","to":"2018-05-01"}}}}
+    GET /lib3/user/_search {"query":{"range":{"age":{"from":20,"to":25,"include_lower":true,"include_upper":false}}}}
 ##### 高亮搜索结果
     GET /lib3/user/_search {"query":{"match":{"interests":"changge"}},"highlight":{"fields":{"interests":{}}}}
     
