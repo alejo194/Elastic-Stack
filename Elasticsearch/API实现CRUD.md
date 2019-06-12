@@ -95,4 +95,18 @@ max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 
     GET /lib3/user/_search {"query":{"match":{"interests":"changge"}},"highlight":{"fields":{"interests":{}}}}
     
 #### Filter查询
-filter是不计算相关性的，同时可以cache,因此，filter速度要快于query
+    filter是不计算相关性的，同时可以cache,因此，filter速度要快于query
+    POST /lib4/items/_bulk {"index":{"_id":1}}
+    {"price":40,"itemID":"ID100123"}
+    {"index":{"_id":2}}
+    {"price":50,"itemID":"ID100124"}
+    {"index":{"_id":3}}
+    {"price":25,"itemID":"ID100125"}
+    {"index":{"_id":4}}
+    {"price":30,"itemID":"ID100126"}
+    {"index":{"_id":5}}
+    {"price":null,"itemID":"ID100127"}
+##### 简单的过滤查询
+    GET /lib4/items/_search {"post_filter:{"term":{"price":40}}"}
+    GET /lib4/items/_search {"post_filter:{"term":{"price":[25,40]}}"}
+    GET /lib4/items/_search {"post_filter:{"term":{"itemID":"ID100123"}}"}
