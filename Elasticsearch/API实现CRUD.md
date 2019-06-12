@@ -110,3 +110,26 @@ max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 
     GET /lib4/items/_search {"post_filter:{"term":{"price":40}}"}
     GET /lib4/items/_search {"post_filter:{"term":{"price":[25,40]}}"}
     GET /lib4/items/_search {"post_filter:{"term":{"itemID":"ID100123"}}"}
+##### bool过滤查询
+    可以实现组合过滤查询
+    格式：
+    {"bool":{"must":[],"should":[],"must_not":[]}}
+    must必须满足条件 ---and
+    should:可以满足也可以不满足的条件---or
+    must_not:不需要满足的条件---not
+    GET /lib4/items/_search {"post_filter":{"bool":{"should":[{"term":{"price":25}},{"term":{"itemID":"id100123"}}
+    ],
+    "must_not":{
+    "term":{"price":30}
+    }
+    }}}
+    
+##### 范围过滤
+    gt >
+    lt <
+    gte >=
+    lte <=
+    GET /lib4/items/_search {"post_filter":{"range":{"price":{"gt":25,"lt":50}}}}
+##### 过滤非空
+    GET /lib4/items/_search {"query":{"bool":{"filter":{"exists":{"field":"price"}}}}}
+    GET /lib4/items/_search {"query":{"constant_score":{"filter":{"exists":{"field":"price"}}}}}
