@@ -62,6 +62,9 @@ PUT lib
           "match_phrase":{"interests":"duanlian, shuoxiangsheng"}
        }
     }
+##### 排序
+    使用sort实现排序：desc降序，asc升序
+    GET /lib3/user/_search {"query":{"match_all":{}},"sort":[{"age":{"order":"asc"}}]}
     
 ##### 指定返回的字段
  > _source、"_source":{"includes":"addr*","excludes":["name","bir*"]}
