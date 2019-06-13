@@ -169,3 +169,17 @@ max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 
     因为文档的时间而影响得分，可以用filter语句来重写前面的例子：
     {"bool":{"must":{"match":{"title":"how to make millions"}},"must_not":{"match":{"tag":"spam"}},"should":[{
     "match":{"tag":"starred"}},{"range":{"date":{"gte":"2014-01-01"}}}]}}
+    
+    通过将range查询移到filter语句中，我们将它转成不评分的查询，将不再影响文档的相关性排名。由于它现在是一个不评分的查询，可以使用各种对
+    filter查询有效的优化手段来提升性能。
+    
+    bool查询本身也可以被用做不评分的查询。简单的将它放置到filter语句中并在内部构建布尔逻辑：
+    {"bool":{"must":{"match":{"title":"how to make millions"}},"must_not":{"match":{"tag":"spam"}},"should":[{
+    "match":{"tag":"starred"}}]，"filter":{"bool":{"must":[{"range":{"date":{"gte":"2014-01-01"}}},{"range":{"price":
+    {"lte":29.99}}}],"must_not":[{"term":{"category":"ebooks"}}]}}}}
+    
+##### constant_score查询
+    它将一个不变的常量评分应用于所有匹配的文档。他被经常用于你只需要执行一个filter而没有其它查询（例如：评分查询）的情况下。
+    {"constant_score":{"filter":{"category":"ebooks"}}}
+    term查询被放置在constant_score中，转成不评分的filter，这种方式可以用来取代只有filter语句的bool查询。
+    
