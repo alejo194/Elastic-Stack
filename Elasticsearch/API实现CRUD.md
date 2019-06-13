@@ -133,3 +133,22 @@ max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 
 ##### 过滤非空
     GET /lib4/items/_search {"query":{"bool":{"filter":{"exists":{"field":"price"}}}}}
     GET /lib4/items/_search {"query":{"constant_score":{"filter":{"exists":{"field":"price"}}}}}
+#### 聚合查询
+    (1)sum
+    GET /lib4/items/_search {"size":0, "aggs":{"price_of_sum":{"sum":{"field":"price"}}}}
+    (2)min
+    GET /lib4/items/_search {"size":0, "aggs":{"price_of_min":{"min":{"field":"price"}}}}
+    (3)max
+    GET /lib4/items/_search {"size":0, "aggs":{"price_of_max":{"max":{"field":"price"}}}}
+    (4)avg
+    GET /lib4/items/_search {"size":0, "aggs":{"price_of_avg":{"avg":{"field":"price"}}}}
+    (5)cardinality求计数
+    GET /lib4/items/_search {"size":0, "aggs":{"price_of_cardi":{"cardinality":{"field":"price"}}}}
+    (6)terms分组
+    GET /lib4/items/_search {"size":0, "aggs":{"price_group_by":{"terms":{"field":"price"}}}}
+    
+    对那些有唱歌兴趣的用户按年龄分组 GET /lib3/user/_search {"query":{"match":{"interests":"changge"}},"size":0,"aggs":{
+    "age_group_by":{"terms":{"field":"age","order":{"avg_of_age":"desc"}},"aggs":{"avg_of_age":{"avg":{"field":"age"}}}}}}
+#### 复合查询
+    将多个基本查询组合成单一查询的查询
+##### 使用bool查询
