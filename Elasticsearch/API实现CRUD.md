@@ -152,3 +152,20 @@ max_expansions: 查询中的词项可以扩展的数目，默认可以无限大 
 #### 复合查询
     将多个基本查询组合成单一查询的查询
 ##### 使用bool查询
+    接收以下参数：
+    must: 文档必须匹配这些条件才能被包含进来
+    must_not: 文档必须不匹配这些条件才能被包含进来
+    should: 如果满足这些语句中的任意语句，将增加_score,否则，无任何影响，它们主要用于修正每个文档的相关性得分。
+    filter: 必须匹配，但它以不评分、过滤模式来进行。这些语句对评分没有贡献，只是根据过滤标准来排除或包含文档。
+    相关性得分是如何组合的，每一个子查询都独自的计算文档的相关性得分。一旦他们的得分被计算出来，bool查询就将这些得分进行合并并且返回一个代表
+    整个布尔操作的得分。
+    
+    下面的查询用于查找title字段匹配how to make millions并且不被标示为spam的文档。那些被标识为starred或在2014的文档，将比另外那些文档拥
+    有更高的排名。如果两者都满足，那么它排名将更高：
+    {"bool":{"must":{"match":{"title":"how to make millions"}},"must_not":{"match":{"tag":"spam"}},"should":[{
+    "match":{"tag":"starred"}},{"range":{"date":{"gte":"2014-01-01"}}}]}}
+    
+    如果没有must语句，那么至少需要能够匹配其中一条should语句，但，如果存在至少一条must语句，则对should语句的匹配没有要求，如果我们不想
+    因为文档的时间而影响得分，可以用filter语句来重写前面的例子：
+    {"bool":{"must":{"match":{"title":"how to make millions"}},"must_not":{"match":{"tag":"spam"}},"should":[{
+    "match":{"tag":"starred"}},{"range":{"date":{"gte":"2014-01-01"}}}]}}
