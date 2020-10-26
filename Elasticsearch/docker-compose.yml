@@ -1,0 +1,24 @@
+version: '2.0'
+services:
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    container_name: es03
+    environment:
+      - node.name=es03
+      - network.publish_host=192.168.1.105
+      - discovery.seed_hosts=192.168.1.103
+      - cluster.initial_master_nodes=192.168.1.103,192.168.1.105
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4G -Xmx4G"
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /mnt/winlog/data/esdata03:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
