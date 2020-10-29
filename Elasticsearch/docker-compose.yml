@@ -1,0 +1,88 @@
+version: '2.2'
+services:
+   elasticsearch:
+     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+     container_name: elasticsearch
+     ports:
+       - 9200:9200
+       - 9300:9300
+     environment:
+       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+       - discovery.type=single-node
+       - bootstrap.memory_lock=true
+       - http.cors.enabled=true
+       - http.cors.allow-origin="*"
+     ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+     restart: always
+     volumes:
+       #- ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+       #- ./config/jvm.options:/usr/share/elasticsearch/config/jvm.options
+       - ./esdata:/usr/share/elasticsearch/data
+     network_mode:
+       bridge
+     #networks:
+     #  - bridge
+     logging:
+       driver: "json-file"
+       options:
+         max-size: "50m"
+         max-file: "10"
+   #logstash:
+   #  image: docker.elastic.co/logstash/logstash:7.2.0
+   #  container_name: logstash
+   #  cpuset: 0,1,2,3
+   #  cpu_count: 4
+   #  cpu_percent: 70
+   #  cpus: 2
+   #  mem_limit: 2G
+   #  memswap_limit: 2G
+   #  mem_reservation: 512m
+   #  restart: always
+   #  ports:
+   #    - 5044:5044
+   #    - 9600:9600
+   #  links:
+   #    - elasticsearch
+   #  networks:
+   #    - elknet
+   #  volumes:
+   #    - ./pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+   #    - ./pipeline/logstash.yml:/usr/share/logstash/config/logstash.yml
+   #  command: ["-f", "/usr/share/logstash/pipeline/logstash.conf"]
+   #  logging:
+   #    driver: "json-file"
+   #    options:
+   #      max-size: "50m"
+   #      max-file: "10"
+   kibana:
+     image: docker.elastic.co/kibana/kibana:7.2.0
+     #image: kibana:5
+     container_name: kibana
+     #cpu_percent: 50
+     #cpus: 1
+     #mem_limit: 4G
+     #memswap_limit: 2G
+     #mem_reservation: 512m
+     environment:
+       SERVER_NAME: kibana
+       ELASTICSEARCH_URL: http://elasticsearch:9200
+       XPACK_MONITORING_ENABLED: "true"
+       OPS_INTERVAL: 60000
+       #ELASTICSEARCH_USERNAME: maxwin
+       #ELASTICSEARCH_PASSWORD: maxwin.maxwin
+     ports:
+       - 5601:5601
+     network_mode:
+       bridge
+     links:
+       - elasticsearch
+     depends_on:
+       - elasticsearch
+     logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
