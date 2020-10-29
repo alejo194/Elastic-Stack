@@ -1,0 +1,29 @@
+version: '2'
+services:
+  filebeat:
+    #image: prima/filebeat:6
+    image: docker.elastic.co/beats/filebeat:7.2.0
+    hostname: filebeat
+    container_name: filebeat
+    user: root
+    restart: always
+    labels:
+      service: filebeat
+    network_mode: maxwin_default
+    environment:
+    - -strict.perms=false
+    #  - output.logstash.hosts=["10.40.201.130:5044"]
+    volumes:
+      #- ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./config/filebeat.log.yml:/usr/share/filebeat/filebeat.yml:ro
+      #- /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service"
+        max-size: "50m"
+        max-file: "10"
+    #logging:
+    #  driver: "none"
