@@ -39,28 +39,28 @@ filter {
 output {
   if [server] == "ebmis" {
     elasticsearch {
-    hosts => "10.40.201.130:9200"
+    hosts => "*.*.*.*:9200"
     manage_template => false
     index => "ebmis-%{+YYYY.MM.dd}"
     }
   }
   else  if [server] == "ettia_gateway" {
     elasticsearch {
-    hosts => "10.40.201.130:9200"
+    hosts => "*.*.*.*:9200"
     manage_template => false
     index => "ettia_gateway-%{+YYYY.MM.dd}"
     }
   }
   else  if [container_name] == "nginx" {
     elasticsearch {
-    hosts => "10.40.201.130:9200"
+    hosts => "*.*.*.*:9200"
     manage_template => false
     index => "nginx-%{+YYYY.MM.dd}"
     }
   }
   else  if [container_name] == "realtime_web" {
     elasticsearch {
-    hosts => "10.40.201.130:9200"
+    hosts => "*.*.*.*:9200"
     manage_template => false
     index => "realtime_web-%{+YYYY.MM.dd}"
     }
@@ -68,7 +68,7 @@ output {
 
   else {
     elasticsearch {
-    hosts => "10.40.201.130:9200"
+    hosts => "*.*.*.*:9200"
     manage_template => false
     #index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
     index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
