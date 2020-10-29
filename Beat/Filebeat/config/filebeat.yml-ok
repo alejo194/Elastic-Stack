@@ -66,7 +66,7 @@ filebeat.autodiscover:
 
 output.logstash:
   enabled: true
-  hosts: ["10.40.201.130:5044"]
+  hosts: ["*.*.*.*:5044"]
 output.console:
   enabled: false
   pretty: true
