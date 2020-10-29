@@ -1,0 +1,45 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/realtime_web-out-*.log
+  fields:
+    local_type: 'realtime_web' #这些都是附加的标签
+    local_ip: 10.40.201.11
+  fields_under_root: true #将标签放到顶头，不然在message字段里
+  include_lines: ["path"] #只发送包含这些字样的日志
+  processors:
+    - decode_json_fields:
+        fields: ['innerdata'] #要进行解析的字段
+        target: "" #json内容解析到指定的字段，如果为空（“”），则解析到顶级结构下
+        overwrite_keys: false #如果解析出的json结构中某个字段在原始的event（在filebeat中传输的一条数据为一个event）中也存在，是否覆盖event中该字段的值，默认值:false
+        process_array: false #数组是否解码，默认值:false
+        max_depth: 1 #解码深度，默认值：1
+  #json.keys_under_root: true
+  #json.add_error_key: true
+  #json.message_key: log
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml   #配置加载的全局模式
+  reload.enabled: false
+setup.template.settings:
+  index.number_of_shards: 3
+setup.kibana.host: 10.40.201.3:5601
+output.elasticsearch:
+  hosts: ["10.40.201.3:9200"] 
+  protocol: http
+  #index: "%{[fields.local_type]}-%{+yyyy.MM.dd}"
+  pipeline: "realtime_web-pipeline"
+setup.template.name: "realtime_web"
+setup.template.pattern: "realtime_web-*"
+setup.dashboards.index: "realtime_web-*"
+#禁用自定义模板
+setup.template.enabled: false 
+#覆盖原来的模板
+setup.template.overwrite: true
+#停用ilm 这一步很重要
+setup.ilm.enabled: false
+#setup.template.settings:
+#  index.number_of_shards: 3
+#output.console:
+#  enabled: true
+#  pretty: true
