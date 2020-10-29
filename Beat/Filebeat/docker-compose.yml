@@ -12,7 +12,7 @@ services:
     network_mode: maxwin_default
     environment:
     - -strict.perms=false
-    #  - output.logstash.hosts=["10.40.201.130:5044"]
+    #  - output.logstash.hosts=["*.*.*.*:5044"]
     volumes:
       #- ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./config/filebeat.log.yml:/usr/share/filebeat/filebeat.yml:ro
