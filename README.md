@@ -104,7 +104,7 @@ services:
      #mem_reservation: 512m
      environment:
        SERVER_NAME: kibana
-       ELASTICSEARCH_URL: http://10.40.201.130:9200
+       ELASTICSEARCH_URL: http://*.*.*.*:9200
        XPACK_MONITORING_ENABLED: "false"
        OPS_INTERVAL: 60000
        #ELASTICSEARCH_USERNAME: maxwin
